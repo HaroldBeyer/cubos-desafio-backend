@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DateRulesModule } from './date-rules/date-rules.module';
 
 @Module({
-  imports: [],
+  imports: [DateRulesModule],
   controllers: [AppController],
   providers: [AppService],
 })
