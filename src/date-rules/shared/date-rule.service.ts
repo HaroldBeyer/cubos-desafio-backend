@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { generateKeyPairSync } from 'crypto';
-import moment from 'moment';
+import * as mom from "moment";
+import { formatDate } from 'src/utils/date';
+const moment = require("moment").default || require("moment");
 import { DateRuleType } from 'src/utils/enums';
 import { createUniqueId } from 'src/utils/id';
 import { DateRule, DateRuleSpecific, DateRuleWeekly } from './date-rule';
@@ -51,52 +52,89 @@ export class DateRuleService {
     }
 
     listInterval(interval: Interval) {
-        // const start = moment(interval.start);
-        // const end = moment(interval.end);
 
-        const specificIds: string[] = this.dateRulesSpecific.map(
+        const specificDateRules: DateRuleSpecific[] = this.dateRulesSpecific.map(
             dateRule => {
+                const date = formatDate(dateRule.date.toString())
                 if (
-                    dateRule.date >= interval.start
+                    date >= moment(interval.start)
                     &&
-                    dateRule.date <= interval.end
+                    date <= moment(interval.end)
                 )
-                    return dateRule.date_rule;
+                    return dateRule;
             }
         );
 
         const weekDays: string[] = this.getWeekDays(interval);
 
-        const weeklyIds: string[] = this.dateRulesWeekly.map(
+        const weeklyDateRules: DateRuleWeekly[] = this.dateRulesWeekly.map(
             dateRule => {
                 if (dateRule.weekdays.some(weekday =>
                     weekDays.includes(weekday)))
-                    return dateRule.date_rule;
+                    return dateRule;
             }
         );
 
-        const ids = specificIds.concat(weeklyIds);
+        // falta mapear dia por dia
 
-        const dateRules = this.dateRules.map(dateRule => {
-            if (dateRule.type == DateRuleType.DAILY)
-                return dateRule;
+        // const ids = specificIds.concat(weeklyIds);
 
-            if (ids.includes(dateRule.id))
-                return dateRule;
-        });
 
-        return dateRules.map(dateRule => dateRule.intervals);
+        let auxDate = interval.start;
+        let arr = [];
+        while (auxDate <= interval.end) {
+            const day = `${auxDate.getDate()}-${auxDate.getMonth()+1}-${auxDate.getFullYear()}`;
+
+            let intervaals: Interval[] = [];
+            const weekDay = auxDate.getDay().toString();
+
+            this.dateRules.forEach(dateRule => {
+                if (dateRule.type == DateRuleType.DAILY) {
+                    dateRule.intervals.forEach(interval => {
+                        intervaals.push(interval);
+                    });
+                }
+                specificDateRules.forEach(specificDateRule => {
+                    const date = formatDate(specificDateRule.date.toString());
+                    const specificDay = `${date.day()}-${date.month()+1}-${date.year()}`;
+                    if (specificDateRule.date_rule == dateRule.id &&
+                        specificDay == day) {
+                        dateRule.intervals.forEach(interval => {
+                            intervaals.push(interval);
+                        });
+                    }
+                });
+
+                weeklyDateRules.forEach(_weeklyDateRule => {
+                    if (_weeklyDateRule.date_rule == dateRule.id && _weeklyDateRule.weekdays.includes(weekDay)) {
+                        dateRule.intervals.forEach(interval => {
+                            intervaals.push(interval);
+                        });
+                    }
+                })
+            });
+
+            auxDate = moment(auxDate).add(1, 'day').toDate();
+
+            arr.push({
+                intervals: intervaals,
+                day
+            })
+        }
+
+        return arr;
+        // return dateRules.map(dateRule => dateRule.intervals);
 
     }
 
     private getWeekDays(interval: Interval) {
         const weekdays = [];
-        let currentDay = moment(interval.start);
-        while (currentDay.toDate() < interval.end && weekdays.length <= 7) {
-            const weekday = currentDay.weekday;
+        let currentDay = interval.start;
+        while (currentDay < interval.end && weekdays.length <= 7) {
+            const weekday = currentDay.getDay();
             if (!weekdays.includes(weekday))
-                weekdays.push(currentDay.weekday);
-            currentDay = currentDay.add(1, 'day');
+                weekdays.push(currentDay.getDay());
+            currentDay = moment(currentDay).add(1, 'day').toDate()
         }
         return weekdays;
     }

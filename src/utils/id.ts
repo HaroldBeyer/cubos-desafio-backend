@@ -1,10 +1,10 @@
 export function createUniqueId(db): string {
     let id = '_' + Math.random().toString(36).substr(2, 9);
 
-    let isInUse = this.getById(db) != null ? true : false;
+    let isInUse = this.getById(id,db) != null ? true : false;
     while (isInUse) {
         id = '_' + Math.random().toString(36).substr(2, 9);
-        isInUse = this.getById(db) != null ? true : false;
+        isInUse = this.getById(id,db) != null ? true : false;
     }
 
     return id;

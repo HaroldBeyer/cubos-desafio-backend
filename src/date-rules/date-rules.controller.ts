@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Post, Query } from '@nestjs/common';
+import { formatDate } from 'src/utils/date';
 import { DateRule } from './shared/date-rule';
 import { DateRuleService } from './shared/date-rule.service';
 import { Interval } from './shared/interval';
@@ -15,7 +16,8 @@ export class DateRulesController {
     }
 
     @Post()
-    async create(@Body() dateRule: DateRule, @Query() options?: {}): Promise<DateRule> {
+    async create(@Body() dateRule: DateRule, @Headers() headers): Promise<DateRule> {
+        const options = JSON.parse(headers['options']);
         return this.dateRuleService.create(dateRule, options);
     }
 
@@ -25,7 +27,11 @@ export class DateRulesController {
     }
 
     @Get(':list')
-    async listInterval(@Body() interval: Interval) {
+    async listInterval(@Headers() headers) {
+        const interval = JSON.parse(headers['intervals']);
+        interval.start = formatDate(interval.start).toDate();
+        interval.end = formatDate(interval.end).toDate();
+
         return this.dateRuleService.listInterval(interval);
     }
 
