@@ -53,7 +53,7 @@ export class DateRuleService {
 
     listInterval(interval: Interval) {
 
-        const specificDateRules: DateRuleSpecific[] = this.dateRulesSpecific.map(
+        const specificDateRules: DateRuleSpecific[] = this.dateRulesSpecific.filter(
             dateRule => {
                 const date = formatDate(dateRule.date.toString())
                 if (
@@ -67,7 +67,7 @@ export class DateRuleService {
 
         const weekDays: string[] = this.getWeekDays(interval);
 
-        const weeklyDateRules: DateRuleWeekly[] = this.dateRulesWeekly.map(
+        const weeklyDateRules: DateRuleWeekly[] = this.dateRulesWeekly.filter(
             dateRule => {
                 if (dateRule.weekdays.some(weekday =>
                     weekDays.includes(weekday)))

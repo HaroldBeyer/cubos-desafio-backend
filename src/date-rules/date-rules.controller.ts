@@ -17,7 +17,9 @@ export class DateRulesController {
 
     @Post()
     async create(@Body() dateRule: DateRule, @Headers() headers): Promise<DateRule> {
-        const options = JSON.parse(headers['options']);
+        let options;
+        if (headers['options'])
+            options = JSON.parse(headers['options']) || null;
         return this.dateRuleService.create(dateRule, options);
     }
 
