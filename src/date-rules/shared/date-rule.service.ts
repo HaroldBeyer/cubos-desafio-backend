@@ -83,7 +83,7 @@ export class DateRuleService {
         let auxDate = interval.start;
         let arr = [];
         while (auxDate <= interval.end) {
-            const day = `${auxDate.getDate()}-${auxDate.getMonth()+1}-${auxDate.getFullYear()}`;
+            let day = `${auxDate.getDate()}-${auxDate.getMonth() + 1}-${auxDate.getFullYear()}`;
 
             let intervaals: Interval[] = [];
             const weekDay = auxDate.getDay().toString();
@@ -96,7 +96,7 @@ export class DateRuleService {
                 }
                 specificDateRules.forEach(specificDateRule => {
                     const date = formatDate(specificDateRule.date.toString());
-                    const specificDay = `${date.day()}-${date.month()+1}-${date.year()}`;
+                    const specificDay = `${date.day()}-${date.month() + 1}-${date.year()}`;
                     if (specificDateRule.date_rule == dateRule.id &&
                         specificDay == day) {
                         dateRule.intervals.forEach(interval => {
@@ -115,6 +115,8 @@ export class DateRuleService {
             });
 
             auxDate = moment(auxDate).add(1, 'day').toDate();
+
+            day = `${auxDate.getDate() > 10 ? auxDate.getDate() : `0${auxDate.getDate()}`}-${(auxDate.getMonth() + 1) > 10 ? auxDate.getMonth() + 1 : `0${auxDate.getMonth()+1}`}-${auxDate.getFullYear()}`;
 
             arr.push({
                 intervals: intervaals,
