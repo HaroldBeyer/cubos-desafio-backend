@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "241cc8ef-ca52-4962-a0e6-5d875aca5bd5",
+		"name": "Cubos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Listar regras",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/date-rules",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"date-rules"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Apagar regra",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/date-rules/ca2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"date-rules",
+						"ca2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastro de regra de atendimento diário",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"DAILY\",\n    \"intervals\": [\n        {\n            \"start\": \"12:30\",\n            \"end\": \"16:00\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/date-rules",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"date-rules"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastro de regra de atendimento semanal",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "options",
+						"value": "{\"weekdays\": [ 1, 2, 4]}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"WEEKLY\",\n    \"intervals\": [\n        {\n            \"start\": \"08:30\",\n            \"end\": \"11:30\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/date-rules",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"date-rules"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastro de regra de atendimento especifico",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "options",
+						"type": "text",
+						"value": "{\"date\":  \"2020-01-12\"}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"SPECIFIC\",\n    \"intervals\": [\n        {\n            \"start\": \"11:30\",\n            \"end\": \"14:00\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/date-rules",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"date-rules"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar intervalo",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "intervals",
+						"type": "text",
+						"value": "{\"start\":\"25-01-2019\",  \"end\": \"05-02-2019\"}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/date-rules/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"date-rules",
+						"list"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
